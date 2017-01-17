@@ -3,8 +3,7 @@
 Page Factory concept example.
 
 Usage:
-<code>
-
+```c#
         [Test]
         [Android, iOS]
         [Category("UTIL")]
@@ -60,5 +59,4 @@ Usage:
 
             //smmc.Close();
         }
-
-</code>
+```

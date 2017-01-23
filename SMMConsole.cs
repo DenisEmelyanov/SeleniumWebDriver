@@ -4,6 +4,7 @@ using OpenQA.Selenium.Support.UI;
 using SunriseMobileX.UiTest.Framework;
 using SunriseMobileX.UiTest.Framework.TestConfiguration;
 using System;
+using System.Threading;
 
 namespace SunriseMobileX.UiTest.Screens
 {
@@ -17,15 +18,17 @@ namespace SunriseMobileX.UiTest.Screens
         public SMMConsole()
         {
             //https://chromedriver.storage.googleapis.com/index.html?path=2.27/
-            driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--start-maximized");
+            driver = new ChromeDriver(options);
 
             //get URL            
             HostConfiguration hostConfiguration = new HostConfiguration();
             string envUrl = hostConfiguration.HwsUrl;
             if (envUrl.Contains("163_"))
-                driver.Url = "https://0.0.0.0/mobqa163_smmc";
+                driver.Url = "https://0.0.0.0/xxxx163_smmc";
             else if (envUrl.Contains("153_"))
-                driver.Url = "https://0.0.0.0/mobaut153_smmc";
+                driver.Url = "https://0.0.0.0/xxxx153_smmc";
             else
                 throw new Exception("The following environment is not supported. Please add it to SMMConsole. URL: " + envUrl);
         }
@@ -66,9 +69,7 @@ namespace SunriseMobileX.UiTest.Screens
                     }
                 case ConsoleTab.Config:
                     {
-                        var configPage = new ConfigPage(driver);
-                        configPage.Tab.Click();
-                        return configPage;
+                        return SelectConfigTab();
                     }
             }
 
@@ -83,6 +84,13 @@ namespace SunriseMobileX.UiTest.Screens
         {
             var configPage = new ConfigPage(driver);
             configPage.Tab.Click();
+            //wait until Loading... will disappear for VitalsViewName field
+            int maxAttempts = 60;
+            while (configPage.ClinicalSummaryConfig.VitalsViewName.StartsWith("Loading") && maxAttempts > 0)
+            {
+                Thread.Sleep(1000);
+                maxAttempts--;
+            }
             return configPage;
         }
 

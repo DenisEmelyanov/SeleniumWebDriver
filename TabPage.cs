@@ -5,25 +5,12 @@ namespace SunriseMobileX.UiTest.Screens
 {
     public class TabPage
     {
-        private IWebDriver driver;
+        public IWebDriver Driver { get; set; }
 
         public TabPage(IWebDriver driver)
         {
-            this.driver = driver;
+            Driver = driver;
             PageFactory.InitElements(driver, this);
-        }
-
-        public IWebDriver Driver
-        {
-            get
-            {
-                return driver;
-            }
-
-            set
-            {
-                driver = value;
-            }
-        }
+        }      
     }
 }
